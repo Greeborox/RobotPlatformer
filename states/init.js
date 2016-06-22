@@ -5,6 +5,7 @@ Robot.init = {
     game.load.image('tiles', 'GFX/tiles.png');
     game.load.image('plasmaShot', 'GFX/plasmaShot.png');
     game.load.image('exit', 'GFX/exit.png');
+    game.load.image('door', 'GFX/door.png');
     game.load.audio('plasma', 'SFX/plasma.wav');
     game.load.image('pParticle', 'GFX/plasmaShotParticle.png');
     game.load.tilemap('level1', 'levels/level.json', null, Phaser.Tilemap.TILED_JSON);

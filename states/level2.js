@@ -9,9 +9,6 @@ Robot.level2 = {
 
     game.camera.follow(this.robot, Phaser.Camera.FOLLOW_LOCKON);
 
-    this.emitter = game.add.emitter(0, 0, 100);
-    this.emitter.makeParticles('pParticle');
-    this.emitter.gravity = 500;
   },
   update: function() {
     game.currTime = this.game.time.now;
