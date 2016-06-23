@@ -32,11 +32,18 @@ Robot.createPlasma = function(game){
       shot.body.velocity.y = 0;
     }
   };
-  plasma.update = function(layer){
+  plasma.update = function(layer, doors){
     game.physics.arcade.collide(this, layer, function(shot){
       this.particleBurst(shot.x,shot.y)
       shot.kill();
     }, null, this);
+    /*for (var i = 0; i > doors.length; i++) {
+      console.log("teststse");
+      game.physics.arcade.collide(this, doors[i], function(shot){
+        this.particleBurst(shot.x,shot.y)
+        shot.kill();
+      }, null, this);
+    }*/
   };
 
   return plasma;

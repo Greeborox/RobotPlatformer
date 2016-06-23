@@ -26,10 +26,9 @@ Robot.config = {
     var boundsD = door.openZone.getBounds();
     if(Phaser.Rectangle.intersects(boundsR, boundsD) && !door.open){
       door.openDoor();
-    } else {
-      if(door.open){
-        door.closeDoor();
-      }
+    }
+    if(!Phaser.Rectangle.intersects(boundsR, boundsD) && door.open){
+      door.closeDoor();
     }
   }
 }
