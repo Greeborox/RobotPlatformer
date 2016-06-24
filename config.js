@@ -30,5 +30,21 @@ Robot.config = {
     if(!Phaser.Rectangle.intersects(boundsR, boundsD) && door.open){
       door.closeDoor();
     }
+  },
+  checkKeys: function(robot,keys){
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+      var boundsR = robot.getBounds();
+      var boundsK = key.getBounds();
+      if(Phaser.Rectangle.intersects(boundsR, boundsK)){
+        key.door.locked = false;
+        if(key.alive){
+          key.getKeySFX.play();
+        }
+        key.kill();
+      } else {
+
+      }
+    }
   }
 }

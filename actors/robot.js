@@ -7,7 +7,6 @@ Robot.createRobot = function(game,x,y,plasma){
   robot.currAttack = 'plasma';
   robot.body.setSize(55, 100, 25, 20);
   robot.body.gravity.y = 800;
-  robot.body.gravity.y = 800;
   robot.facingLeft = false;
   robot.lastShot = 0;
   robot.animations.add('walkRight', [0,1,2,3,4,5], 8, true);

@@ -37,12 +37,15 @@ Robot.createPlasma = function(game){
       this.particleBurst(shot.x,shot.y)
       shot.kill();
     }, null, this);
-    /*for (var i = 0; i > doors.length; i++) {
-      console.log("teststse");
-      game.physics.arcade.collide(this, doors[i], function(shot){
+    for(door in doors){
+      game.physics.arcade.collide(this, doors[door], function(door, shot){
         this.particleBurst(shot.x,shot.y)
         shot.kill();
       }, null, this);
+    }
+    /*for (var i = 0; i > doors.length; i++) {
+      console.log("teststse");
+
     }*/
   };
 
