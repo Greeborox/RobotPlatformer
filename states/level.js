@@ -11,6 +11,10 @@ Robot.level1 = {
     this.key1 = Robot.createKey(game,832,96,this.door2);
     this.key2 = Robot.createKey(game,1024,608,this.door3);
     this.keys.push(this.key1,this.key2);
+    this.levikula1 = Robot.createLewikula(game,140,75);
+    this.levikula2 = Robot.createLewikula(game,240,245);
+    this.enemies = [];
+    this.enemies.push(this.levikula1,this.levikula2);
 
     this.plasmaShots = Robot.createPlasma(game);
     this.robot = Robot.createRobot(game,40,510,this.plasmaShots);
@@ -31,10 +35,7 @@ Robot.level1 = {
     this.plasmaShots.update(this.layer, this.doors);
     this.robot.moveRobot(game.cursor,game.spaceKey);
     Robot.config.checkKeys(this.robot,this.keys);
-    for (var i = 0; i < this.keys.length; i++) {
-      this.keys[i].update();
-    }
-    this.key1.update();
     Robot.config.checkExit(this.robot,this.exit);
+    Robot.config.checkEnemiesCollision(this.enemies, this.layer, this.doors, this.plasmaShots);
   },
 }

@@ -9,8 +9,10 @@ Robot.createRobot = function(game,x,y,plasma){
   robot.body.gravity.y = 800;
   robot.facingLeft = false;
   robot.lastShot = 0;
-  robot.animations.add('walkRight', [0,1,2,3,4,5], 8, true);
-  robot.animations.add('walkLeft', [6,7,8,9,10,11], 8, true);
+  robot.animations.add('walkRight', [0,1,2,3,4,5], 10, true);
+  robot.animations.add('walkLeft', [6,7,8,9,10,11], 10, true);
+  robot.animations.add('shootRight', [12,13], 8, true);
+  robot.animations.add('shootLeft', [14,15], 8, true);
   robot.moveRobot = function(cursor,space){
     if (cursor.left.isDown) {
       this.body.velocity.x = -200;
@@ -32,9 +34,9 @@ Robot.createRobot = function(game,x,y,plasma){
     } else {
       this.body.velocity.x = 0;
       this.animations.stop();
-      if(this.facingLeft){
+      if(this.facingLeft && !space.isDown){
         this.frame = 6;
-      } else {
+      } else if (this.facingRight && !space.isDown) {
         this.frame = 0;
       }
     }
@@ -43,6 +45,11 @@ Robot.createRobot = function(game,x,y,plasma){
     }
     if (space.isDown){
       if(game.currTime - this.lastShot > this.attacks[this.currAttack].coolDown){
+      /*if(this.facingLeft){
+          this.animations.play('shootLeft');
+        } else {
+          this.animations.play('shootRight');
+        }*/
         this.lastShot = game.currTime;
         this.attacks[this.currAttack].shoot(this.x,this.y,this.width,this.height, this.facingLeft);
       }

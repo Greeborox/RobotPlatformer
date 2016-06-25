@@ -5,7 +5,10 @@ Robot.init = {
     game.load.image('tiles', 'GFX/tiles.png');
     game.load.image('plasmaShot', 'GFX/plasmaShot.png');
     game.load.image('exit', 'GFX/exit.png');
-    game.load.image('door', 'GFX/door.png');
+    game.load.spritesheet('lockedDoor', 'GFX/lockedDoor.png',24, 128);
+    game.load.spritesheet('openDoor', 'GFX/openDoor.png',24, 128);
+    game.load.spritesheet('door', 'GFX/door.png',24, 128);
+    game.load.spritesheet('redKey', 'GFX/keyRed.png',36, 60);
     game.load.image('key', 'GFX/key.png');
     game.load.audio('plasma', 'SFX/plasma.wav');
     game.load.audio('getKey', 'SFX/keyPickup.wav');
@@ -15,6 +18,7 @@ Robot.init = {
     game.load.tilemap('level1', 'levels/level.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.tilemap('level2', 'levels/level2.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.spritesheet('robot', 'GFX/robot.png', 102, 120);
+    game.load.spritesheet('lewikula', 'GFX/lewikula.png', 96, 96);
   },
   create: function() {
     game.stage.backgroundColor = '#3498db';

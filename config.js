@@ -38,6 +38,7 @@ Robot.config = {
       var boundsK = key.getBounds();
       if(Phaser.Rectangle.intersects(boundsR, boundsK)){
         key.door.locked = false;
+        key.door.animations.play('openDoorAnim')
         if(key.alive){
           key.getKeySFX.play();
         }
@@ -46,5 +47,15 @@ Robot.config = {
 
       }
     }
-  }
+  },
+  checkEnemiesCollision: function(enemies, layer, doors){
+    for (var i = 0; i < enemies.length; i++) {
+      var enemy = enemies[i];
+      for (door in doors) {
+        var door = doors[door];
+        game.physics.arcade.collide(enemy, door);
+      }
+      game.physics.arcade.collide(enemy, layer);
+    }
+  },
 }
