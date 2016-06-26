@@ -9,10 +9,19 @@ Robot.createRobot = function(game,x,y,plasma){
   robot.body.gravity.y = 800;
   robot.facingLeft = false;
   robot.lastShot = 0;
-  robot.animations.add('walkRight', [0,1,2,3,4,5], 10, true);
-  robot.animations.add('walkLeft', [6,7,8,9,10,11], 10, true);
-  robot.animations.add('shootRight', [12,13], 8, true);
-  robot.animations.add('shootLeft', [14,15], 8, true);
+
+  robot.emitter = game.add.emitter(0, 0, 100);
+  robot.emitter.makeParticles(['headPart','bodyPart','legPart2','legPart1']);
+  robot.emitter.gravity = 300;
+
+  robot.particleBurst = function(x,y){
+    this.emitter.x = x;
+    this.emitter.y = y;
+    this.emitter.start(true, 600, null, 5);
+  };
+
+  robot.animations.add('walkRight', [0,1,2,3,4,5], 8, true);
+  robot.animations.add('walkLeft', [6,7,8,9,10,11], 8, true);
   robot.moveRobot = function(cursor,space){
     if (cursor.left.isDown) {
       this.body.velocity.x = -200;
@@ -34,22 +43,17 @@ Robot.createRobot = function(game,x,y,plasma){
     } else {
       this.body.velocity.x = 0;
       this.animations.stop();
-      if(this.facingLeft && !space.isDown){
+      if(this.facingLeft){
         this.frame = 6;
-      } else if (this.facingRight && !space.isDown) {
+      } else {
         this.frame = 0;
       }
     }
     if (cursor.up.isDown && this.body.onFloor()) {
       this.body.velocity.y = -550;
     }
-    if (space.isDown){
+    if (space.isDown && this.alive){
       if(game.currTime - this.lastShot > this.attacks[this.currAttack].coolDown){
-      /*if(this.facingLeft){
-          this.animations.play('shootLeft');
-        } else {
-          this.animations.play('shootRight');
-        }*/
         this.lastShot = game.currTime;
         this.attacks[this.currAttack].shoot(this.x,this.y,this.width,this.height, this.facingLeft);
       }

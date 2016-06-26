@@ -36,6 +36,6 @@ Robot.level1 = {
     this.robot.moveRobot(game.cursor,game.spaceKey);
     Robot.config.checkKeys(this.robot,this.keys);
     Robot.config.checkExit(this.robot,this.exit);
-    Robot.config.checkEnemiesCollision(this.enemies, this.layer, this.doors, this.plasmaShots);
+    Robot.config.checkEnemiesCollision(this.robot, this.enemies, this.layer, this.doors, this.plasmaShots);
   },
 }

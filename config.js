@@ -48,14 +48,27 @@ Robot.config = {
       }
     }
   },
-  checkEnemiesCollision: function(enemies, layer, doors){
+  checkEnemiesCollision: function(robot, enemies, layer, doors, plasmas){
     for (var i = 0; i < enemies.length; i++) {
       var enemy = enemies[i];
       for (door in doors) {
         var door = doors[door];
         game.physics.arcade.collide(enemy, door);
       }
+      game.physics.arcade.overlap(enemy, plasmas, function(e,p){
+        e.kill();
+        plasmas.particleBurst(p.x,p.y);
+        p.kill();
+      }, null, this);
       game.physics.arcade.collide(enemy, layer);
+      game.physics.arcade.overlap(robot, enemy, this.robotDie, null, this);
     }
   },
+  robotDie: function(robot){
+    robot.particleBurst(robot.x,robot.y)
+    robot.kill();
+    game.time.events.add(700, function(){
+      game.state.start(game.levels[game.currLevel]);
+    }, this);
+  }
 }
