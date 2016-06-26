@@ -1,7 +1,9 @@
 Robot.level1 = {
   create: function() {
+    this.background = game.add.tileSprite(0, 0, 1920, 736, "tile");
     this.map = Robot.config.setMap(game,{'tileMap':'level1','tileImage':'tiles'})
-    this.layer = Robot.config.setLayer(this.map,'Tile Layer 1')
+    //this.layer = Robot.config.setLayer(this.map,'Tile Layer 1');
+    this.walls = Robot.config.setLayer(this.map,'Tile Layer 2');
     this.door1 = Robot.createDoor(game,320,576, false);
     this.door2 = Robot.createDoor(game,928,224, true);
     this.door3 = Robot.createDoor(game,1152,32, true);
@@ -25,17 +27,17 @@ Robot.level1 = {
   },
   update: function() {
     game.currTime = this.game.time.now;
-    game.physics.arcade.collide(this.robot, this.layer)
+    game.physics.arcade.collide(this.robot, this.walls);
     for (var i = 0; i < this.doors.length; i++) {
       game.physics.arcade.collide(this.robot, this.doors[i])
     }
     for (var i = 0; i < this.doors.length; i++) {
       Robot.config.handleDoor(this.robot, this.doors[i]);
     }
-    this.plasmaShots.update(this.layer, this.doors);
+    this.plasmaShots.update(this.walls, this.doors);
     this.robot.moveRobot(game.cursor,game.spaceKey);
     Robot.config.checkKeys(this.robot,this.keys);
     Robot.config.checkExit(this.robot,this.exit);
-    Robot.config.checkEnemiesCollision(this.robot, this.enemies, this.layer, this.doors, this.plasmaShots);
+    Robot.config.checkEnemiesCollision(this.robot, this.enemies, this.walls, this.doors, this.plasmaShots);
   },
 }

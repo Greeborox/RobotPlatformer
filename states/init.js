@@ -9,6 +9,7 @@ Robot.init = {
     game.load.image('legPart1', 'GFX/legPart1.png');
     game.load.image('legPart2', 'GFX/legPart2.png');
     game.load.image('headPart', 'GFX/headPart.png');
+    game.load.image('tile', 'GFX/tile.png');
     game.load.spritesheet('lockedDoor', 'GFX/lockedDoor.png',24, 128);
     game.load.spritesheet('openDoor', 'GFX/openDoor.png',24, 128);
     game.load.spritesheet('door', 'GFX/door.png',24, 128);
