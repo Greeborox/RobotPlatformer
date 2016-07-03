@@ -6,7 +6,17 @@ Robot.createLewikula = function(game,x,y){
   lewikula.body.velocity.x = 100 * game.rnd.pick([-1, 1]);
   lewikula.body.bounce.x = 1;
 
+  lewikula.HP = 20;
+
   lewikula.animations.play('lewikulaAnim');
+
+  lewikula.update = function(){
+    if(this.HP <= 0){
+      this.kill();
+      this.x = -100;
+      this.y = -100
+    }
+  }
 
   return lewikula;
 }

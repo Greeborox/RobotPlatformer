@@ -1,10 +1,11 @@
-Robot.createRobot = function(game,x,y,plasma){
+Robot.createRobot = function(game,x,y,plasma,gun){
   var robot = game.add.sprite(x, y, 'robot');
   game.physics.arcade.enable(robot);
   robot.attacks = {
     'plasma': plasma,
+    'gun': gun
   }
-  robot.currAttack = 'plasma';
+  robot.currAttack = 'gun';
   robot.body.setSize(55, 100, 25, 20);
   robot.body.gravity.y = 800;
   robot.facingLeft = false;

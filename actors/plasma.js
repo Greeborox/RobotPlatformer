@@ -43,10 +43,6 @@ Robot.createPlasma = function(game){
         shot.kill();
       }, null, this);
     }
-    /*for (var i = 0; i > doors.length; i++) {
-      console.log("teststse");
-
-    }*/
   };
 
   return plasma;

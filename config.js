@@ -70,5 +70,63 @@ Robot.config = {
     game.time.events.add(700, function(){
       game.state.start(game.levels[game.currLevel]);
     }, this);
+  },
+  checkMachineGunHits: function(robot, enemies, layer, doors, MG){
+    var line = MG.shootLine;
+    var closestObj;
+    var closestObjDist = 1000000;
+    var dist;
+    var enemyHit = false;
+    tileHits = layer.getRayCastTiles(line, 4, false, false);
+    for (var i = 0; i < tileHits.length; i++) {
+      if(tileHits[i].collideLeft){
+        dist = Math.abs(robot.x-tileHits[i].x*32);
+        if(dist < closestObjDist){
+          closestObj = tileHits[i];
+          closestObjDist = dist;
+          enemyHit = false;
+        }
+      }
+    }
+    for (door in doors) {
+      var door = doors[door];
+      var doorLine = new Phaser.Line(door.x, door.y, door.x, door.y+door.height);
+      if(line.intersects(doorLine, true)){
+        dist = Math.abs(robot.x-door.x);
+        if(dist < closestObjDist){
+          closestObj = door;
+          closestObjDist = dist;
+          enemyHit = false;
+        }
+      };
+    }
+    for (enemy in enemies) {
+      var enemy = enemies[enemy];
+      var enemyLine = new Phaser.Line(enemy.x, enemy.y, enemy.x, enemy.y+enemy.height);
+      if(line.intersects(enemyLine, true)){
+        dist = Math.abs(robot.x-enemy.x);
+        if(dist < closestObjDist){
+          closestObj = enemy;
+          closestObjDist = dist;
+          enemyHit = true;
+        }
+      };
+    }
+    if(closestObj){
+      var x;
+      if(closestObj.hasOwnProperty('collideLeft')){
+        x = closestObj.x*32;
+      } else {
+        x = closestObj.x
+      }
+      if(robot.facingLeft){
+        MG.particleBurst(x+closestObj.width,line.y);
+      } else {
+        MG.particleBurst(x,line.y);
+      }
+      if(enemyHit){
+        closestObj.HP -= 1;
+      }
+    }
   }
 }

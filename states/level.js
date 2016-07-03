@@ -19,13 +19,15 @@ Robot.level1 = {
     this.enemies.push(this.levikula1,this.levikula2);
 
     this.plasmaShots = Robot.createPlasma(game);
-    this.robot = Robot.createRobot(game,40,510,this.plasmaShots);
+    this.machineGun = Robot.createMachineGun(game);
+    this.robot = Robot.createRobot(game,40,510,this.plasmaShots,this.machineGun);
     this.exit = Robot.createExit(game,992,64);
 
     game.camera.follow(this.robot, Phaser.Camera.FOLLOW_LOCKON);
 
   },
   update: function() {
+    this.machineGun.update(this.robot);
     game.currTime = this.game.time.now;
     game.physics.arcade.collide(this.robot, this.walls);
     for (var i = 0; i < this.doors.length; i++) {
@@ -39,5 +41,8 @@ Robot.level1 = {
     Robot.config.checkKeys(this.robot,this.keys);
     Robot.config.checkExit(this.robot,this.exit);
     Robot.config.checkEnemiesCollision(this.robot, this.enemies, this.walls, this.doors, this.plasmaShots);
+    if(this.machineGun.shootLine){
+      Robot.config.checkMachineGunHits(this.robot, this.enemies, this.walls, this.doors, this.machineGun)
+    }
   },
 }
