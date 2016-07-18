@@ -1,7 +1,6 @@
 Robot.createMachineGun = function(game){
   var gun = new Phaser.Line(0, 0, 0, 0);
 
-  gun.shotSFX = game.add.audio('plasma');
   gun.coolDown = 250;
   gun.spacePressed = false;
 

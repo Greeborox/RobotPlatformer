@@ -2,7 +2,7 @@ Robot.config = {
   setMap: function(game,mapData){
     var map = game.add.tilemap(mapData.tileMap);
     map.addTilesetImage(mapData.tileImage);
-    map.setCollisionBetween(1,4);
+    map.setCollisionBetween(1,15);
     return map
   },
   setLayer: function(map,name){

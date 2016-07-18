@@ -1,8 +1,7 @@
 Robot.level1 = {
   create: function() {
-    this.background = game.add.tileSprite(0, 0, 1920, 736, "tile");
     this.map = Robot.config.setMap(game,{'tileMap':'level1','tileImage':'tiles'})
-    //this.layer = Robot.config.setLayer(this.map,'Tile Layer 1');
+    this.layer = Robot.config.setLayer(this.map,'Tile Layer 1');
     this.walls = Robot.config.setLayer(this.map,'Tile Layer 2');
     this.door1 = Robot.createDoor(game,320,576, false);
     this.door2 = Robot.createDoor(game,928,224, true);

@@ -28,7 +28,7 @@ Robot.init = {
     game.load.spritesheet('lewikula', 'GFX/lewikula.png', 96, 96);
   },
   create: function() {
-    game.stage.backgroundColor = '#3498db';
+    game.stage.backgroundColor = '#808080';
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
     game.scale.refresh();
@@ -37,7 +37,7 @@ Robot.init = {
     game.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     game.currTime;
     game.levels = ['level1','level2'];
-    game.currLevel = 0;
+    game.currLevel = 1;
     game.state.start(game.levels[game.currLevel]);
   }
 }
