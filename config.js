@@ -43,8 +43,16 @@ Robot.config = {
           key.getKeySFX.play();
         }
         key.kill();
-      } else {
-
+      }
+    }
+  },
+  checkSwitches: function(robot,switches){
+    for (var i = 0; i < switches.length; i++) {
+      var currSwitch = switches[i];
+      var boundsR = robot.getBounds();
+      var boundsS = currSwitch.getBounds();
+      if(Phaser.Rectangle.intersects(boundsR, boundsS)){
+        currSwitch.switchSwitch();
       }
     }
   },
@@ -56,10 +64,16 @@ Robot.config = {
         game.physics.arcade.collide(enemy, door);
       }
       game.physics.arcade.overlap(enemy, plasmas, function(e,p){
-        e.kill();
-        plasmas.particleBurst(p.x,p.y);
+        plasmas.createExplosion(p.x,p.y);
         p.kill();
       }, null, this);
+      for (explo in plasmas.explosions) {
+        var explo = plasmas.explosions[explo];
+        game.physics.arcade.overlap(enemy, explo, function(e){
+          e.HP -= 5;
+        }, null, this);
+        game.physics.arcade.overlap(robot, explo, this.robotDie, null, this);
+      }
       game.physics.arcade.collide(enemy, layer);
       game.physics.arcade.overlap(robot, enemy, this.robotDie, null, this);
     }
@@ -127,6 +141,15 @@ Robot.config = {
       if(enemyHit){
         closestObj.HP -= 1;
       }
+    }
+  },
+  handlePickUps: function(powerups, layer, robot){
+    for (var i = 0; i < powerups.length; i++) {
+      game.physics.arcade.collide(powerups[i], layer);
+      game.physics.arcade.overlap(powerups[i], robot, function(p,r){
+        p.pickUp(robot);
+        p.kill();
+      }, null, this);
     }
   }
 }

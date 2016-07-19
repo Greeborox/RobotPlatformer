@@ -10,6 +10,7 @@ Robot.createRobot = function(game,x,y,plasma,gun){
   robot.body.gravity.y = 800;
   robot.facingLeft = false;
   robot.lastShot = 0;
+  robot.rockets = 5;
 
   robot.emitter = game.add.emitter(0, 0, 100);
   robot.emitter.makeParticles(['headPart','bodyPart','legPart2','legPart1']);
@@ -23,10 +24,10 @@ Robot.createRobot = function(game,x,y,plasma,gun){
 
   robot.animations.add('walkRight', [0,1,2,3,4,5], 8, true);
   robot.animations.add('walkLeft', [6,7,8,9,10,11], 8, true);
-  robot.moveRobot = function(cursor,space){
+  robot.moveRobot = function(cursor,space,zet){
     if (cursor.left.isDown) {
       this.body.velocity.x = -200;
-      if(this.body.onFloor()){
+      if(this.body.onFloor() || this.body.touching.down){
         this.animations.play('walkLeft');
       } else {
         this.frame = 6;
@@ -35,7 +36,7 @@ Robot.createRobot = function(game,x,y,plasma,gun){
     }
     else if (cursor.right.isDown) {
       this.body.velocity.x = 200;
-      if(this.body.onFloor()){
+      if(this.body.onFloor() || this.body.touching.down){
         this.animations.play('walkRight');
       } else {
         this.frame = 0;
@@ -50,13 +51,20 @@ Robot.createRobot = function(game,x,y,plasma,gun){
         this.frame = 0;
       }
     }
-    if (cursor.up.isDown && this.body.onFloor()) {
+    if ((cursor.up.isDown && this.body.onFloor()) || (cursor.up.isDown && this.body.touching.down)) {
       this.body.velocity.y = -550;
     }
     if (space.isDown && this.alive){
       if(game.currTime - this.lastShot > this.attacks[this.currAttack].coolDown){
         this.lastShot = game.currTime;
         this.attacks[this.currAttack].shoot(this.x,this.y,this.width,this.height, this.facingLeft);
+      }
+    }
+    if (zet.isDown && this.alive){
+      if(game.currTime - this.lastShot > this.attacks["plasma"].coolDown && this.rockets){
+        this.rockets -= 1;
+        this.lastShot = game.currTime;
+        this.attacks["plasma"].shoot(this.x,this.y,this.width,this.height, this.facingLeft);
       }
     }
   };
