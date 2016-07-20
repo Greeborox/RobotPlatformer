@@ -5,7 +5,7 @@ Robot.createAmmo = function(game,x,y){
   ammo.body.velocity.y = -150;
 
   ammo.pickUp = function(robot){
-    robot.rockets += 5;
+    robot.rockets += 1;
   }
 
   return ammo

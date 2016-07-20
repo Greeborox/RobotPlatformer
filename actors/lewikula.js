@@ -12,10 +12,12 @@ Robot.createLewikula = function(game,x,y, pickups){
 
   lewikula.update = function(){
     if(this.HP <= 0){
+      if(this.alive){
+        pickups.push(Robot.createAmmo(game, this.x, this. y));
+        this.x = -100;
+        this.y = -100
+      }
       this.kill();
-      pickups.push(Robot.createAmmo(game, this.x, this. y));
-      this.x = -100;
-      this.y = -100
     }
   }
 

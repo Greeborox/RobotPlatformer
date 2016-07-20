@@ -10,7 +10,9 @@ Robot.createRobot = function(game,x,y,plasma,gun){
   robot.body.gravity.y = 800;
   robot.facingLeft = false;
   robot.lastShot = 0;
-  robot.rockets = 5;
+  robot.rockets = 0;
+  robot.lives = 6;
+  robot.hit = false;
 
   robot.emitter = game.add.emitter(0, 0, 100);
   robot.emitter.makeParticles(['headPart','bodyPart','legPart2','legPart1']);
@@ -24,7 +26,7 @@ Robot.createRobot = function(game,x,y,plasma,gun){
 
   robot.animations.add('walkRight', [0,1,2,3,4,5], 8, true);
   robot.animations.add('walkLeft', [6,7,8,9,10,11], 8, true);
-  robot.moveRobot = function(cursor,space,zet){
+  robot.moveRobot = function(cursor, zet, ex){
     if (cursor.left.isDown) {
       this.body.velocity.x = -200;
       if(this.body.onFloor() || this.body.touching.down){
@@ -54,7 +56,7 @@ Robot.createRobot = function(game,x,y,plasma,gun){
     if ((cursor.up.isDown && this.body.onFloor()) || (cursor.up.isDown && this.body.touching.down)) {
       this.body.velocity.y = -550;
     }
-    if (space.isDown && this.alive){
+    if (ex.isDown && this.alive){
       if(game.currTime - this.lastShot > this.attacks[this.currAttack].coolDown){
         this.lastShot = game.currTime;
         this.attacks[this.currAttack].shoot(this.x,this.y,this.width,this.height, this.facingLeft);
