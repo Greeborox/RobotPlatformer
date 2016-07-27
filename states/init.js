@@ -2,10 +2,13 @@ var Robot = {}
 
 Robot.init = {
   preload: function() {
+    game.load.image('splash', 'GFX/splash.png');
+    game.load.image('pressKey', 'GFX/pressKey.png');
+    game.load.image('logo', 'GFX/logo.png');
     game.load.image('tiles', 'GFX/tiles.png');
-    game.load.image('plasmaShot', 'GFX/plasmaShot.png');
+    game.load.image('bomb', 'GFX/bomb.png');
     game.load.image('pParticle', 'GFX/plasmaShotParticle.png');
-    game.load.spritesheet('exit', 'GFX/exit.png',60,96);
+    game.load.spritesheet('exit', 'GFX/exit.png',66,99);
     game.load.image('bodyPart', 'GFX/bodyPart.png');
     game.load.image('legPart1', 'GFX/legPart1.png');
     game.load.image('legPart2', 'GFX/legPart2.png');
@@ -15,11 +18,43 @@ Robot.init = {
     game.load.image('lift', 'GFX/lift.png');
     game.load.image('explosion', 'GFX/explosion.png');
     game.load.image('ammo', 'GFX/ammo.png');
-    game.load.image('key', 'GFX/key.png');
-    game.load.spritesheet('lockedDoor', 'GFX/lockedDoor.png',24, 128);
-    game.load.spritesheet('openDoor', 'GFX/openDoor.png',24, 128);
-    game.load.spritesheet('door', 'GFX/door.png',24, 128);
-    game.load.spritesheet('redKey', 'GFX/keyRed.png',36, 60);
+    game.load.image('treasure0', 'GFX/treasure0.png');
+    game.load.image('treasure1', 'GFX/treasure1.png');
+    game.load.image('treasure2', 'GFX/treasure2.png');
+    game.load.image('treasure3', 'GFX/treasure3.png');
+    game.load.image('treasure4', 'GFX/treasure4.png');
+    game.load.image('treasure5', 'GFX/treasure5.png');
+    game.load.image('contPart1', 'GFX/contPart1.png');
+    game.load.image('contPart2', 'GFX/contPart2.png');
+    game.load.image('contPart3', 'GFX/contPart3.png');
+    game.load.image('contPart4', 'GFX/contPart4.png');
+    game.load.image('contPart5', 'GFX/contPart5.png');
+    game.load.image('contPart6', 'GFX/contPart6.png');
+    game.load.image('kopterPart1', 'GFX/kopterPart1.png');
+    game.load.image('kopterPart2', 'GFX/kopterPart2.png');
+    game.load.image('kopterPart3', 'GFX/kopterPart3.png');
+    game.load.image('kopterPart4', 'GFX/kopterPart4.png');
+    game.load.image('tankPart1', 'GFX/tankPart1.png');
+    game.load.image('tankPart2', 'GFX/tankPart2.png');
+    game.load.image('panel', 'GFX/panel.png');
+    game.load.image('scoreCounter', 'GFX/scoreCounter.png');
+    game.load.image('rocketCounter', 'GFX/rocketCounter.png');
+    game.load.spritesheet('digits', 'GFX/digits.png',24,48);
+    game.load.spritesheet('life', 'GFX/life.png',123,66);
+    game.load.spritesheet('chest1', 'GFX/chest1.png',48,54);
+    game.load.spritesheet('chest2', 'GFX/chest2.png',48,54);
+    game.load.spritesheet('chest3', 'GFX/chest3.png',48,54);
+    game.load.spritesheet('chest4', 'GFX/chest4.png',48,54);
+    game.load.spritesheet('barrel1', 'GFX/barrel1.png',42,60);
+    game.load.spritesheet('barrel2', 'GFX/barrel2.png',42,60);
+    game.load.spritesheet('barrel3', 'GFX/barrel3.png',42,60);
+    game.load.spritesheet('barrel4', 'GFX/barrel4.png',42,60);
+    game.load.spritesheet('doorRed', 'GFX/doorRed.png',24, 128);
+    game.load.spritesheet('doorGreen', 'GFX/doorGreen.png',24, 128);
+    game.load.spritesheet('doorYellow', 'GFX/doorYellow.png',24, 128);
+    game.load.spritesheet('keyGreen', 'GFX/keyGreen.png',36, 60);
+    game.load.spritesheet('keyYellow', 'GFX/keyYellow.png',36, 60);
+    game.load.spritesheet('keyRed', 'GFX/keyRed.png',36, 60);
     game.load.spritesheet('liftSwitch', 'GFX/liftSwitch.png',30, 42);
     game.load.spritesheet('rocket', 'GFX/roket.png',36, 9);
     game.load.audio('plasma', 'SFX/plasma.wav');
@@ -29,12 +64,15 @@ Robot.init = {
     game.load.audio('doorLocked', 'SFX/doorLocked.wav');
     game.load.tilemap('level1', 'levels/level.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.tilemap('level2', 'levels/level2.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('level3', 'levels/level3.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('level4', 'levels/level4.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.spritesheet('robot', 'GFX/robot.png', 102, 120);
     game.load.spritesheet('lewikula', 'GFX/lewikula.png', 96, 96);
     game.load.spritesheet('pseudoKopter', 'GFX/pseudokopter.png', 96, 42);
     game.load.spritesheet('tank', 'GFX/tank.png', 75, 75);
   },
   create: function() {
+    game.forceSingleUpdate = true;
     game.stage.backgroundColor = '#808080';
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
@@ -44,9 +82,11 @@ Robot.init = {
     game.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     game.ZKey = game.input.keyboard.addKey(Phaser.Keyboard.Z);
     game.XKey = game.input.keyboard.addKey(Phaser.Keyboard.X);
+    game.keyStruck = false;
+    Robot.points = 0;
     game.currTime;
-    game.levels = ['level1','level2'];
+    game.levels = ['level4'];
     game.currLevel = 0;
-    game.state.start(game.levels[game.currLevel]);
+    game.state.start('splash');
   }
 }

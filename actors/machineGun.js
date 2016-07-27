@@ -22,8 +22,8 @@ Robot.createMachineGun = function(game){
   gun.shoot = function(roboX, roboY, roboW, roboH, facingLeft){
     this.gunfire.alpha = 1;
     this.shotSFX.play();
-    var x1 = roboX+(roboW/2);
-    var y1 = roboY+(roboH/2);
+    var x1 = roboX+(roboW*0.5);
+    var y1 = roboY+(roboH*0.5);
     var y2 = y1;
     if(facingLeft){
       x2 = game.camera.x;
@@ -39,7 +39,7 @@ Robot.createMachineGun = function(game){
     }, this);
   };
   gun.update = function(robot){
-    this.gunfire.y=robot.y+robot.height/2+12;
+    this.gunfire.y=robot.y+robot.height*0.5+12;
     if(robot.facingLeft){
       this.gunfire.x=robot.x+23;
       this.gunfire.scale.x = -1;

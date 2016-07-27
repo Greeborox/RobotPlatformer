@@ -6,13 +6,7 @@ Robot.createPlasma = function(game){
   plasma.setAll('outOfBoundsKill', true);
   plasma.setAll('checkWorldBounds', true);
 
-  plasma.createExplosion = function(x,y){
-    var explo = game.add.sprite(x, y, 'explosion');
-    game.physics.arcade.enable(explo);
-    explo.anchor.setTo(.5);
-    game.time.events.add(100, function(){explo.kill()}, this);
-    return explo
-  }
+  plasma.createExplosion = Robot.createExplosion;
 
   plasma.shotSFX = game.add.audio('plasma');
   plasma.coolDown = 600;
@@ -21,7 +15,7 @@ Robot.createPlasma = function(game){
     var shot = this.getFirstExists(false);
     if(shot) {
       this.shotSFX.play()
-      shot.reset(roboX+roboW/2,roboY+roboH/2);
+      shot.reset(roboX+roboW*0.5,roboY+roboH*0.5+10);
       shot.anchor.setTo(.5, 1)
       if(facingLeft){
         shot.scale.x = -1;
@@ -33,13 +27,19 @@ Robot.createPlasma = function(game){
       shot.body.velocity.y = 0;
     }
   };
-  plasma.update = function(layer, doors, explos){
+  plasma.update = function(layer, doors, containers, explos){
     game.physics.arcade.collide(this, layer, function(shot){
       explos.push(plasma.createExplosion(shot.x,shot.y));
       shot.kill();
     }, null, this);
     for(door in doors){
       game.physics.arcade.collide(this, doors[door], function(door, shot){
+        explos.push(plasma.createExplosion(shot.x,shot.y));
+        shot.kill();
+      }, null, this);
+    }
+    for(cont in containers){
+      game.physics.arcade.collide(this, containers[cont], function(cont, shot){
         explos.push(plasma.createExplosion(shot.x,shot.y));
         shot.kill();
       }, null, this);

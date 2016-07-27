@@ -1,4 +1,4 @@
-Robot.createKopter = function(game, x, y, pickups, shots){
+Robot.createKopter = function(game, x, y, pickups, shots, explos){
   var kopter = game.add.sprite(x, y, 'pseudoKopter');
   kopter.animations.add('kopterAnim', [0,1,2,3,4,5,6,7,8,9,10], 10, true);
   game.physics.arcade.enable(kopter);
@@ -8,11 +8,25 @@ Robot.createKopter = function(game, x, y, pickups, shots){
   kopter.anchor.setTo(.5, 0)
   kopter.lastShot = 0;
   kopter.coolDown = 1500;
+  kopter.pointValue = 10;
 
   kopter.HP = 10;
 
+  kopter.emitter = game.add.emitter(0, 0, 100);
+  kopter.emitter.makeParticles(['kopterPart1','kopterPart2','kopterPart3','kopterPart4']);
+  kopter.emitter.gravity = 200;
+
+  kopter.particleBurst = function(x,y){
+    this.emitter.x = x;
+    this.emitter.y = y;
+    this.emitter.start(true, 600, null, 5);
+  };
+
   kopter.createBomb = function(x,y){
-    var bomb = game.add.sprite(x, y, 'plasmaShot');
+    var bomb = game.add.sprite(x, y, 'bomb');
+    bomb.events.onOutOfBounds.add(function(){
+      this.destroy();
+    }, this);
 
     bomb.emitter = game.add.emitter(0, 0, 100);
     bomb.emitter.makeParticles('pParticle');
@@ -25,6 +39,9 @@ Robot.createKopter = function(game, x, y, pickups, shots){
       this.emitter.x = this.x;
       this.emitter.y = this.y;
       this.emitter.start(true, 200, null, 3);
+      if(this.alive){
+        explos.push(Robot.createExplosion(this.x+this.height*0.5,this.y+this.width*0.5));
+      }
       this.kill();
     }
 
@@ -45,11 +62,13 @@ Robot.createKopter = function(game, x, y, pickups, shots){
     }
     if(this.HP <= 0){
       if(this.alive){
-        pickups.push(Robot.createAmmo(game, this.x, this. y));
+        this.particleBurst(this.x,this.y);
+        pickups.push(Robot.createTreasure(game, this.x, this.y));
         this.x = -100;
-        this.y = -100
+        this.y = -100;
+        Robot.points += this.pointValue;
       }
-      this.kill();
+      this.destroy();
     }
   }
 

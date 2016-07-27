@@ -10,3 +10,20 @@ Robot.createAmmo = function(game,x,y){
 
   return ammo
 }
+
+Robot.createTreasure = function(game,x,y){
+  var treasureNum = game.rnd.integerInRange(0, 5)
+  treasureType = 'treasure'+treasureNum;
+  treasure = game.add.sprite(x, y, treasureType);
+  game.physics.arcade.enable(treasure);
+  treasure.body.gravity.y = 600;
+  treasure.body.velocity.y = -150;
+
+  treasure.pickUp = function(){
+    Robot.points += Robot.treasureValues[treasureNum];
+  }
+
+  return treasure
+}
+
+Robot.treasureValues = [5,8,13,15,20,27];

@@ -1,21 +1,24 @@
-Robot.createDoor = function(game,x,y,locked){
-  var door = game.add.sprite(x, y, 'door');
+Robot.createDoor = function(game,x,y,locked,type){
+  var door = game.add.sprite(x, y, type);
 
-  door.animations.add('openDoorAnim', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 10, true);
-  door.animations.add('closedDoorAnim', [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41], 10, true);
+  door.animations.add('closedDoorAnim', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 10, true);
+  door.animations.add('openDoorAnim', [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41], 10, true);
+  door.animations.add('closing', [48,47,46,45,44,43,42], 25, true);
+  door.animations.add('opening', [42,43,44,45,46,47,48], 25, true);
+
   game.physics.arcade.enable(door);
   door.body.immovable = true
 
   door.locked = locked;
   door.open = false;
-  door.tween = undefined;//game.add.tween(door);
   door.doorSFX = game.add.audio('door');
   door.doorLockedSFX = game.add.audio('doorLocked');
 
   door.openZone = game.add.sprite(x-64, y);
   game.physics.arcade.enable(door.openZone);
-  door.openZone.body.setSize(door.width, door.height);
+  door.openZone.body.setSize(32, 32);
   door.openZone.width = 160;
+  door.openZone.height = 128;
   if(locked){
     door.animations.play('closedDoorAnim')
   } else {
@@ -24,14 +27,9 @@ Robot.createDoor = function(game,x,y,locked){
 
   door.openDoor = function(){
     if(!this.locked){
-      this.doorSFX.play()
-      if(this.tween && this.tween.isRunning){
-        this.tween.stop();
-      }
-      this.tween = game.add.tween(this)
+      this.doorSFX.play();
       this.open = true;
-      this.tween.to({height: 0}, 300);
-      this.tween.start();
+      this.animations.play('opening');
     } else {
       this.doorLockedSFX.play()
       this.open = true;
@@ -40,16 +38,22 @@ Robot.createDoor = function(game,x,y,locked){
 
   door.closeDoor = function(){
     if(!this.locked){
-      this.doorSFX.play()
-      if(this.tween && this.tween.isRunning){
-        this.tween.stop();
-      }
-      this.tween = game.add.tween(this)
+      this.doorSFX.play();
       this.open = false;
-      this.tween.to({height: 128}, 300);
-      this.tween.start();
+      this.height = 128;
+      this.animations.play('closing');
     } else {
       this.open = false;
+    }
+  }
+
+  door.update = function(){
+    if(this.frame === 48 && this.open){
+      this.animations.stop();
+      this.height = 0;
+    }
+    if(this.frame === 42 && !this.open){
+      door.animations.play('openDoorAnim');
     }
   }
 

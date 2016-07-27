@@ -7,11 +7,12 @@ Robot.createRobot = function(game,x,y,plasma,gun){
   }
   robot.currAttack = 'gun';
   robot.body.setSize(55, 100, 25, 20);
+  robot.body.maxVelocity.y = 800
   robot.body.gravity.y = 800;
   robot.facingLeft = false;
   robot.lastShot = 0;
-  robot.rockets = 0;
-  robot.lives = 6;
+  robot.rockets = 2;
+  robot.lives = 9;
   robot.hit = false;
 
   robot.emitter = game.add.emitter(0, 0, 100);
@@ -28,7 +29,7 @@ Robot.createRobot = function(game,x,y,plasma,gun){
   robot.animations.add('walkLeft', [6,7,8,9,10,11], 8, true);
   robot.moveRobot = function(cursor, zet, ex){
     if (cursor.left.isDown) {
-      this.body.velocity.x = -200;
+      this.body.velocity.x = -250;
       if(this.body.onFloor() || this.body.touching.down){
         this.animations.play('walkLeft');
       } else {
@@ -37,7 +38,7 @@ Robot.createRobot = function(game,x,y,plasma,gun){
       this.facingLeft = true;
     }
     else if (cursor.right.isDown) {
-      this.body.velocity.x = 200;
+      this.body.velocity.x = 250;
       if(this.body.onFloor() || this.body.touching.down){
         this.animations.play('walkRight');
       } else {

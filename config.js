@@ -14,11 +14,22 @@ Robot.config = {
     var boundsR = robot.getBounds();
     var boundsE = exit.getBounds();
     if (Phaser.Rectangle.intersects(boundsR, boundsE)){
-      game.currLevel++;
-      if(game.currLevel === game.levels.length){
-        game.currLevel = 0;
+      if(robot.alive){
+        game.currLevel++;
+        if(game.currLevel === game.levels.length){
+          game.currLevel = 0;
+        }
       }
-      game.state.start(game.levels[game.currLevel]);
+      robot.kill();
+      var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+      var text = game.add.text(game.camera.x+game.camera.width*0.5, game.camera.y+game.camera.height*0.5, "- Congratulations -\nLevel complete\nCurrent score: "+Robot.points, style);
+      text.anchor.set(0.5);
+      text.alpha = 0.1;
+      game.add.tween(text).to( { alpha: 1 }, 2000, "Linear", true);
+      game.time.events.add(2200, function(){
+        game.state.start(game.levels[game.currLevel]);
+      }, this);
+
     }
   },
   handleDoor: function(robot,door){
@@ -70,7 +81,7 @@ Robot.config = {
       for (explo in explos) {
         var explo = explos[explo];
         game.physics.arcade.overlap(enemy, explo, function(e){
-          e.HP -= 5;
+          e.HP -= 15;
         }, null, this);
       }
       game.physics.arcade.collide(enemy, layer);
@@ -81,7 +92,7 @@ Robot.config = {
     robot.particleBurst(robot.x,robot.y)
     robot.kill();
     game.time.events.add(700, function(){
-      game.state.start(game.levels[game.currLevel]);
+      Robot.config.resetGame();
     }, this);
   },
   robotHit: function(robot){
@@ -104,7 +115,7 @@ Robot.config = {
       this.robotDie(robot);
     }
   },
-  checkMachineGunHits: function(robot, enemies, layer, doors, MG){
+  checkMachineGunHits: function(robot, containers, enemies, layer, doors, MG){
     var line = MG.shootLine;
     var closestObj;
     var closestObjDist = 1000000;
@@ -130,6 +141,18 @@ Robot.config = {
           closestObj = door;
           closestObjDist = dist;
           enemyHit = false;
+        }
+      };
+    }
+    for (cont in containers) {
+      var cont = containers[cont];
+      var contLine = new Phaser.Line(cont.x, cont.y, cont.x, cont.y+cont.height);
+      if(line.intersects(contLine, true)){
+        dist = Math.abs(robot.x-cont.x);
+        if(dist < closestObjDist){
+          closestObj = cont;
+          closestObjDist = cont;
+          enemyHit = true;
         }
       };
     }
@@ -170,15 +193,22 @@ Robot.config = {
       game.physics.arcade.collide(powerups[i], layer);
       game.physics.arcade.overlap(powerups[i], robot, function(p,r){
         p.pickUp(robot);
-        p.kill();
+        p.destroy();
       }, null, this);
     }
   },
-  handleExplosions: function(explos, enemies, robot){
+  handleExplosions: function(explos, enemies, robot,containers){
     for (var i = 0; i < explos.length; i++) {
       if(!explos[i].alive){
+        explos[i].destroy();
         explos.splice(i,1);
       }
+      for (cont in containers) {
+        var cont = containers[cont];
+          game.physics.arcade.overlap(cont, explos[i], function(c){
+            c.HP -= 5;
+          }, null, this);
+        };
       game.physics.arcade.overlap(robot, explos[i], this.robotHit, null, this);
     }
   },
@@ -186,8 +216,8 @@ Robot.config = {
     for (var i = 0; i < shots.length; i++) {
       var shot = shots[i];
       game.physics.arcade.collide(shot, layer, function(shot){
-        shots.splice(i,1);
         shot.remove();
+        shots.splice(i,1);
       }, null, this);
       game.physics.arcade.collide(shot, robot, function(shot,robot){
         shots.splice(i,1);
@@ -208,6 +238,30 @@ Robot.config = {
           shot.remove();
         }, null, this);
       }
+      if(!shot.alive){
+        shot.destroy();
+      }
     }
+  },
+  handleContainers: function(containers, layer, pickups, explos){
+    for (var i = 0; i < containers.length; i++) {
+      var cont = containers[i];
+      game.physics.arcade.collide(cont, layer);
+      if(cont.HP <= 0){
+        pickups.push(Robot.createTreasure(game, cont.x, cont.y));
+        cont.particleBurst(cont.x,cont.y);
+        if(cont.exploding){
+          explos.push(Robot.createExplosion(cont.x+cont.width*0.5,cont.y+cont.height*0.5));
+        }
+        cont.kill();
+        cont.destroy();
+        containers.splice(i,1);
+      }
+    }
+  },
+  resetGame: function(){
+    game.keyStruck = false;
+    game.currLevel = 0;
+    game.state.start("splash");
   }
 }
